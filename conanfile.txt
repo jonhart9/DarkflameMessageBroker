@@ -1,0 +1,12 @@
+[requires]
+gtest/1.7.0@bincrafters/stable
+
+[options]
+gtest:shared=False
+
+[generators]
+cmake
+
+[imports]
+bin, *.dll -> ./build/bin
+lib, *.dylib* -> ./build/bin
