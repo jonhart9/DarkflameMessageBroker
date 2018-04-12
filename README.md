@@ -2,10 +2,10 @@
 A simple message broker that would allow objects to subscribe to message events based on a message type
 
 ## Dependencies
-* [Google Test](https://github.com/google/googletest)
+* <a href="https://github.com/google/googletest" target="_blank">Google Test Suite</a>
 
 ## Build
-To build the project, you will need [Conan Package Manager](https://conan.io/).
+To build the project, you will need <a href="https://conan.io/" target="_blank">Conan Package Manager</a>
 
 First, download the code and unzip it somewhere. Next run `conan install .` to download and install Conan packages (just gtest for the time being.)
 
