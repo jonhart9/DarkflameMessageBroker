@@ -10,11 +10,14 @@ class Message : public IMessage {
 public:
 
     /**
-     * Gets the unique message type.
+     * Generates or returns the unique type for the object
      *
      * @return The unique message type
      */
-    static size_t getUniqueType();
+    static size_t getUniqueType() {
+        static size_t uniqueType = IMessage::getUniqueType();
+        return uniqueType;
+    }
 
 public:
 
@@ -28,7 +31,7 @@ public:
     /**
      * The destructor.
      */
-    explicit ~Message() override { }
+    ~Message() override = default;
 
     /**
      * Gets a reference to the message type object stored in this message.
@@ -40,9 +43,6 @@ public:
     }
 
 private:
-
-    /** The unique type. */
-    static size_t uniqueType;
 
     /** A reference to the message type. */
     const MessageType& messageType_;

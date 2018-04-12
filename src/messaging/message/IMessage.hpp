@@ -11,7 +11,7 @@ public:
     /**
      * The destructor.
      */
-    virtual ~IMessage() = 0;
+    virtual ~IMessage() { }
 
 protected:
 
@@ -20,10 +20,8 @@ protected:
      *
      * @return The unique type identifying the message
      */
-    static size_t getUniqueType();
-
-private:
-
-    /** The unique type associated with this message. */
-    static size_t uniqueType;
+    static size_t getUniqueType() {
+        static size_t uniqueType = 0;
+        return uniqueType++;
+    }
 };

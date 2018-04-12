@@ -6,8 +6,6 @@
  * A class to handle the brokering of event messages.
  */
 class MessageBroker {
-
-private:
-
+    // TODO: Implement...
 };
 
