@@ -38,7 +38,7 @@ public:
      *
      * @return The message type object reference.
      */
-    const MessageType& getMessageType() {
+    const MessageType& getMessageType() const {
         return this->messageType_;
     }
 

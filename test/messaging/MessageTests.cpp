@@ -1,5 +1,5 @@
 /**
- * A test case file to verify the integrity of the {@link Event} class.
+ * A test case file to verify the integrity of the {@link Message} class.
  */
 #include <gtest/gtest.h>
 
