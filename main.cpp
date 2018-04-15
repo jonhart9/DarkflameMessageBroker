@@ -3,25 +3,21 @@
 
 #include "src/messaging/MessageEventService.hpp"
 
-struct TestStruct1 {
-    int id = 1;
-};
+struct TestStruct1 { };
 
-struct TestStruct2 {
-    int id = 2;
-};
+struct TestStruct2 { };
 
 static int id = 0;
 
-void testCallback1(const TestStruct1& testStruct1) {
+void testCallback1(const TestStruct1& struct1) {
     std::cout << id++ << std::endl;
 }
 
-void testCallback2(const TestStruct2& testStruct2) {
+void testCallback2(const TestStruct2& struct2) {
     std::cout << "bob" << std::endl;
 }
 
-void testCallback3(const TestStruct1& testStruct2) {
+void testCallback3(const TestStruct1& struct1) {
     std::cout << "joe" << std::endl;
 }
 
@@ -48,6 +44,14 @@ int main(int argc, char ** argv) {
     bool didUnsubscribe = eventService.unsubscribe<TestStruct1>(subscriberID);
 
     std::cout << didUnsubscribe << std::endl;
+
+    for (int i = 0; i < 5; ++i) {
+        eventService.broadcast(TestStruct1());
+
+        sleep(5);
+
+        eventService.update();
+    }
 
     return 0;
 }

@@ -12,7 +12,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 add_executable(DarkflameEventManager main.cpp src/messaging/IMessageBroker.hpp src/messaging/MessageBroker.hpp src/messaging/MessageEventService.hpp)
-# add_executable(DarkflameEventManagerTests)
+add_executable(DarkflameEventManagerTests test/messaging/MessageBrokerTests.cpp test/messaging/MessageEventServiceTests.cpp)
 
 target_link_libraries(DarkflameEventManager ${CONAN_LIBS})
-# target_link_libraries(DarkflameEventManagerTests ${CONAN_LIBS})
+target_link_libraries(DarkflameEventManagerTests ${CONAN_LIBS})

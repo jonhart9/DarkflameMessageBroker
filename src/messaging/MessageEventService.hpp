@@ -55,7 +55,7 @@ public:
         }
 
         // Now add the callback
-        MessageBroker<MessageType> * broker = dynamic_cast<MessageBroker<MessageType>*>(iterator->second);
+        auto * broker = dynamic_cast<MessageBroker<MessageType>*>(iterator->second);
         if (broker == nullptr) return 0;
 
         return broker->subscribe(callback);
@@ -80,7 +80,7 @@ public:
         }
 
         // If the type exists, just try to delete it from the broker
-        MessageBroker<MessageType> * broker = dynamic_cast<MessageBroker<MessageType>*>(iterator->second);
+        auto * broker = dynamic_cast<MessageBroker<MessageType>*>(iterator->second);
         if (broker == nullptr) return false;
 
         // Return whether or not we unsubscribed
@@ -93,8 +93,8 @@ public:
     void update() {
 
         // Update the brokers
-        for (auto iterator = message_brokers.begin(); iterator != message_brokers.end(); ++iterator) {
-            iterator->second->update();
+        for (auto message_broker : message_brokers) {
+            message_broker.second->update();
         }
     }
 

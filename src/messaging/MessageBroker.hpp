@@ -30,7 +30,7 @@ public:
     /**
      * Broadcasts a message to the subscribers.
      *
-     * @param message The message broadcasted
+     * @param message The message to be broadcast to subscribers
      */
     void broadcast(const MessageType& message) {
 
