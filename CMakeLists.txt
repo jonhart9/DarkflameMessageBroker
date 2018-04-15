@@ -11,8 +11,8 @@ else()
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
-add_executable(DarkflameEventManager main.cpp src/messaging/MessageBroker.cpp src/messaging/MessageBroker.hpp src/messaging/message/IMessage.hpp src/messaging/message/Message.hpp src/messaging/message/MessageCallbackWrapper.hpp)
-add_executable(DarkflameEventManagerTests test/messaging/MessageTests.cpp test/messaging/MessageBrokerTests.cpp)
+add_executable(DarkflameEventManager main.cpp src/messaging/IMessageBroker.hpp src/messaging/MessageBroker.hpp src/messaging/MessageEventService.hpp)
+# add_executable(DarkflameEventManagerTests)
 
 target_link_libraries(DarkflameEventManager ${CONAN_LIBS})
-target_link_libraries(DarkflameEventManagerTests ${CONAN_LIBS})
+# target_link_libraries(DarkflameEventManagerTests ${CONAN_LIBS})

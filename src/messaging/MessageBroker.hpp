@@ -1,68 +1,77 @@
 #pragma once
 
+#include <cstdio>
 #include <functional>
-#include <queue>
 #include <unordered_map>
 
-#include "message/IMessage.hpp"
-#include "message/Message.hpp"
-#include "message/MessageCallbackWrapper.hpp"
+#include "IMessageBroker.hpp"
 
-/**
- * A class to handle the brokering of event messages.
- */
-class MessageBroker {
+template <typename MessageType>
+class MessageBroker : public IMessageBroker {
 
-    /** A shorthand for the callback function that we will use. */
-    template <typename MessageType>
+    /** A shorthand for the message callback. */
     using message_callback = std::function<void(const MessageType&)>;
 
 public:
 
-    // TODO: Implement...
-
     /**
-     * The constructor.
-     */
-    MessageBroker() : subscriber_unique_id_(0) { }
-
-    /**
-     * Subscribes an object to an event type.
+     * Generates or returns the unique type for the object
      *
-     * @tparam MessageType The object type that we are subscribing to
-     * @param messageCallback The callback function to be run. Has an argument of `const MessageType&`
-     * @return The unique ID of this subscribed function
+     * @return The unique message type
      */
-    template <typename MessageType>
-    size_t subscribe(message_callback<MessageType> messageCallback) {
-
-        // First, generate a new unique ID
-        size_t uniqueID = subscriber_unique_id_++;
-
-        // First, make sure we have an unordered map for the map
-        auto iterator = subscribers_.find(Message<MessageType>::getUniqueType());
-        if (iterator == subscribers_.end()) {
-            subscribers_.insert(std::make_pair(Message<MessageType>::getUniqueType(), std::unordered_map<size_t, message_callback<IMessage>>()));
-        }
-
-        // Now, store the message callback in the subscribers
-        iterator = subscribers_.find(Message<MessageType>::getUniqueType());
-        iterator->second.insert(std::make_pair(uniqueID, MessageCallbackWrapper<MessageType>(messageCallback)));
-
-        // Return the unique ID
-        return uniqueID;
+    static size_t getUniqueType() {
+        static size_t uniqueType = IMessageBroker::getUniqueType();
+        return uniqueType;
     }
 
+public:
+
+    /**
+     * Subscribes a callback to a message.
+     *
+     * @param callback The message callback
+     * @return The subscriber ID
+     */
+    size_t subscribe(message_callback callback) {
+
+        // Save the message callback to the subscribers
+        size_t subscriberID = subscriber_id++;
+        subscribers.insert(std::make_pair(subscriberID, callback));
+
+        return subscriberID;
+    }
+
+    /**
+     * Unsubscribe an message event from the event manager.
+     *
+     * @param subscriberID The subscriber ID
+     * @return Whether or not it was un-subscribed effectively.
+     */
+    bool unsubscribe(size_t subscriberID) {
+
+        // First, figure out if the subscriber ID already exists
+        auto iterator = subscribers.find(subscriberID);
+        if (iterator == subscribers.end()) {
+            return false;
+        }
+
+        // Now, remove the data from the array
+        subscribers.erase(subscriberID);
+        return true;
+    }
+
+    /**
+     * Updates the data by releasing all queued
+     * message events.
+     */
+    void update() override {
+        // TODO: Implement...
+    }
 
 private:
 
-    /** The queue to hold all event messages. */
-    std::queue<IMessage> message_queue_;
+    size_t subscriber_id = 1;
 
-    /** A map of all subscribers functions. */
-    std::unordered_map<size_t, std::unordered_map<size_t, message_callback<IMessage>>> subscribers_;
-
-    /** Hold the unique subscriber ID. */
-    size_t subscriber_unique_id_;
+    /** A map of the subscribers with their IDs. */
+    std::unordered_map<size_t, message_callback> subscribers;
 };
-

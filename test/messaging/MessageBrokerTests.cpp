@@ -2,23 +2,24 @@
  * A test case file to verify the integrity of the {@link MessageBroker} class.
  */
 #include <gtest/gtest.h>
+#include <cstdio>
 
 #include "../../src/messaging/MessageBroker.hpp"
 
 struct TestStruct1 { int id = 1; };
 struct TestStruct2 { int id = 2; };
 
-void testCallback1(const TestStruct1& testStruct1) { }
-void testCallback2(const TestStruct2& testStruct2) { }
+void testCallback1(const TestStruct1& testStruct1) { std::cout << testStruct1.id << std::endl; }
+void testCallback2(const TestStruct2& testStruct2) { std::cout << testStruct2.id << std::endl; }
 
 /**
  * Test to subscribe to an event manager with a single message object
  * type to verify that the subscriber ID is 0.
  */
 TEST(MessageBrokerTests, TestSubscribeCorrectIDOneType) {
-    MessageBroker messageBroker;
+    MessageBroker<TestStruct1> messageBroker;
 
-    size_t id = messageBroker.subscribe<TestStruct1>(&testCallback1);
+    size_t id = messageBroker.subscribe(&testCallback1);
     EXPECT_EQ(0, id);
 }
 
