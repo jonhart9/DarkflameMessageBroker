@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <functional>
 #include <unordered_map>
+#include <queue>
 
 #include "IMessageBroker.hpp"
 
@@ -25,6 +26,17 @@ public:
     }
 
 public:
+
+    /**
+     * Broadcasts a message to the subscribers.
+     *
+     * @param message The message broadcasted
+     */
+    void broadcast(const MessageType& message) {
+
+        // Add the message to the queue
+        message_queue.push(message);
+    }
 
     /**
      * Subscribes a callback to a message.
@@ -65,11 +77,45 @@ public:
      * message events.
      */
     void update() override {
-        // TODO: Implement...
+
+        // First, get the size of the queue (so we don't have to copy it)
+        // This makes sure any events broadcasts recursively are not called
+        // immediately, so that we don't have an infinite loop
+        size_t queueSize = message_queue.size();
+
+        // Now, keep popping the queue
+        for (; queueSize > 0; --queueSize) {
+
+            // Get the message
+            const MessageType& message = message_queue.front();
+            emit(message);
+
+            // Now remove the message
+            message_queue.pop();
+        }
     }
 
 private:
 
+    /**
+     * Emits message to their corresponding subscribers.
+     *
+     * @param message The message to emit
+     */
+    void emit(const MessageType& message) {
+
+        // Emit the message to all subscribers
+        for (auto iterator = subscribers.begin(); iterator != subscribers.end(); ++iterator) {
+            iterator->second(message);
+        }
+    }
+
+private:
+
+    /** The message queue. */
+    std::queue<const MessageType> message_queue;
+
+    /** The current subscriber ID for this broker. */
     size_t subscriber_id = 1;
 
     /** A map of the subscribers with their IDs. */

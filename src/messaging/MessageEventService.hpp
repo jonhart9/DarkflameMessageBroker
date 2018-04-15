@@ -18,6 +18,19 @@ class MessageEventService {
 
 public:
 
+    template <typename MessageType>
+    void broadcast(const MessageType& message) {
+
+        // First, make sure the broker exists
+        size_t typeID = MessageBroker<MessageType>::getUniqueType();
+
+        auto iterator = message_brokers.find(typeID);
+        if (iterator == message_brokers.end()) return;
+
+        // Broadcast the message to the broker
+        dynamic_cast<MessageBroker<MessageType>*>(iterator->second)->broadcast(message);
+    }
+
     /**
      * Subscribes a callback to a message event.
      *
@@ -72,6 +85,17 @@ public:
 
         // Return whether or not we unsubscribed
         return broker->unsubscribe(subscriberID);
+    }
+
+    /**
+     * Updates the brokers.
+     */
+    void update() {
+
+        // Update the brokers
+        for (auto iterator = message_brokers.begin(); iterator != message_brokers.end(); ++iterator) {
+            iterator->second->update();
+        }
     }
 
 private:
